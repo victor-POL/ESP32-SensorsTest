@@ -39,12 +39,12 @@ const float RL10 = 50;
 #define KEYS_ROW_3 '7', '8', '9', 'C'
 #define KEYS_ROW_4 '*', '0', '#', 'D'
 #define KEYPAD_ROW_1_PIN 13
-#define KEYPAD_ROW_2_PIN 25
+#define KEYPAD_ROW_2_PIN 12
 #define KEYPAD_ROW_3_PIN 14
-#define KEYPAD_ROW_4_PIN 17
-#define KEYPAD_COLUMN_1_PIN 16
-#define KEYPAD_COLUMN_2_PIN 4
-#define KEYPAD_COLUMN_3_PIN 2
+#define KEYPAD_ROW_4_PIN 27
+#define KEYPAD_COLUMN_1_PIN 17
+#define KEYPAD_COLUMN_2_PIN 16
+#define KEYPAD_COLUMN_3_PIN 4
 #define KEYPAD_COLUMN_4_PIN 15
 
 char keys[ROWS_KEYPAD][COLS_KEYPAD] = {
