@@ -3,7 +3,12 @@
 #include <Keypad.h>
 
 // Buzzer
-#define BUZZER_PIN 27
+#define STATUS_KEY_SOUND 10
+#define STATUS_SUCESS_SOUND 11
+#define STATUS_FAIL_SOUND 12
+#define STATUS_NO_SOUND 13
+
+#define BUZZER_PIN 2
 
 #define BUZZER_CHANNEL 4
 #define BUZZER_RESOLUTION 8
@@ -16,6 +21,11 @@
 #define BUZZER_KEY_DURATION 100
 #define BUZZER_SUCCESS_DURATION 3000
 #define BUZZER_FAIL_DURATION 3000
+
+int timeSoundActivated = 0;
+int lastTimeBuzzer = 0;
+int status;
+bool buzzerOn = false;
 
 // Servo
 #define SERVO_PIN 26
@@ -71,7 +81,7 @@ void setup()
 {
     Serial.begin(115200);
 
-    // setupBuzzer();
+    setupBuzzer();
 
     // setupServo();
 
@@ -84,8 +94,10 @@ void setup()
 
 void loop()
 {
-    testKeypad();
+    testKeypadWithBuzzer();
 }
+
+// Buzzer
 
 void setupBuzzer()
 {
@@ -114,6 +126,28 @@ void testBuzzerFailSoundAndDuration()
     ledcWriteTone(BUZZER_CHANNEL, 0);
 }
 
+bool reachedTimeout()
+{
+    int currentTime = millis();
+    int timeElapsed = currentTime - timeSoundActivated;
+    int limit = 0;
+
+    switch (status)
+    {
+    case STATUS_KEY_SOUND:
+        limit = BUZZER_KEY_DURATION;
+        break;
+    case STATUS_SUCESS_SOUND:
+        limit = BUZZER_SUCCESS_DURATION;
+        break;
+    case STATUS_FAIL_SOUND:
+        limit = BUZZER_FAIL_DURATION;
+        break;
+    }
+
+    return timeElapsed > limit;
+}
+
 void testBuzzer()
 {
     testBuzzerKeySoundAndDuration();
@@ -139,6 +173,8 @@ void testServo()
     delay(3000);
 }
 
+// Relay
+
 void setupRelay()
 {
     pinMode(RELAY_PIN, OUTPUT);
@@ -151,6 +187,8 @@ void testRelay()
     digitalWrite(RELAY_PIN, LOW);
     delay(2500);
 }
+
+// Photoresistor
 
 void setupPhotoresistor()
 {
@@ -168,6 +206,8 @@ void testPhotoresistor()
 
     delay(2000);
 }
+
+// Keypad
 
 void setupKeypad()
 {
@@ -187,5 +227,56 @@ void testKeypad()
     if (key)
     {
         Serial.println(key);
+    }
+}
+
+void testKeypadWithBuzzer()
+{
+    if (status != STATUS_NO_SOUND && reachedTimeout() == true)
+    {
+        ledcWriteTone(BUZZER_CHANNEL, 0);
+        status = STATUS_NO_SOUND;
+    }
+
+    char key = keypad.getKey();
+    if (key)
+    {
+        Serial.println(key);
+
+        switch (key)
+        {
+        case '0':
+        case '1':
+        case '2':
+        case '3':
+        case '4':
+        case '5':
+        case '6':
+        case '7':
+        case '8':
+        case '9':
+        case 'A':
+        case 'B':
+        case 'C':
+        case 'D':
+            buzzerOn = true;
+            timeSoundActivated = millis();
+            status = STATUS_KEY_SOUND;
+            ledcWriteTone(BUZZER_CHANNEL, BUZZER_KEY_FREQ);
+            break;
+        case '*':
+            buzzerOn = true;
+            timeSoundActivated = millis();
+            status = STATUS_SUCESS_SOUND;
+            ledcWriteTone(BUZZER_CHANNEL, BUZZER_SUCCESS_FREQ);
+
+            break;
+        case '#':
+            buzzerOn = true;
+            timeSoundActivated = millis();
+            status = STATUS_FAIL_SOUND;
+            ledcWriteTone(BUZZER_CHANNEL, BUZZER_FAIL_FREQ);
+            break;
+        }
     }
 }
