@@ -1,5 +1,6 @@
 #include <Arduino.h>
 #include <ESP32Servo.h>
+#include <Keypad.h>
 
 // Buzzer
 #define BUZZER_PIN 27
@@ -30,6 +31,42 @@ Servo servo = Servo();
 const float GAMMA = 0.7;
 const float RL10 = 50;
 
+// Keypad
+#define ROWS_KEYPAD 4
+#define COLS_KEYPAD 4
+#define KEYS_ROW_1 '1', '2', '3', 'A'
+#define KEYS_ROW_2 '4', '5', '6', 'B'
+#define KEYS_ROW_3 '7', '8', '9', 'C'
+#define KEYS_ROW_4 '*', '0', '#', 'D'
+#define KEYPAD_ROW_1_PIN 13
+#define KEYPAD_ROW_2_PIN 25
+#define KEYPAD_ROW_3_PIN 14
+#define KEYPAD_ROW_4_PIN 17
+#define KEYPAD_COLUMN_1_PIN 16
+#define KEYPAD_COLUMN_2_PIN 4
+#define KEYPAD_COLUMN_3_PIN 2
+#define KEYPAD_COLUMN_4_PIN 15
+
+char keys[ROWS_KEYPAD][COLS_KEYPAD] = {
+    {KEYS_ROW_1},
+    {KEYS_ROW_2},
+    {KEYS_ROW_3},
+    {KEYS_ROW_4}};
+
+uint8_t rowPins[ROWS_KEYPAD] = {
+    KEYPAD_ROW_1_PIN,
+    KEYPAD_ROW_2_PIN,
+    KEYPAD_ROW_3_PIN,
+    KEYPAD_ROW_4_PIN,
+};
+uint8_t columnPins[COLS_KEYPAD] = {
+    KEYPAD_COLUMN_1_PIN,
+    KEYPAD_COLUMN_2_PIN,
+    KEYPAD_COLUMN_3_PIN,
+    KEYPAD_COLUMN_4_PIN,
+};
+Keypad keypad = Keypad(makeKeymap(keys), rowPins, columnPins, ROWS_KEYPAD, COLS_KEYPAD);
+
 void setup()
 {
     Serial.begin(115200);
@@ -40,12 +77,14 @@ void setup()
 
     // setupRelay();
 
-    setupPhotoresistor();
+    // setupPhotoresistor();
+
+    setupKeypad();
 }
 
 void loop()
 {
-    testPhotoresistor();
+    testKeypad();
 }
 
 void setupBuzzer()
@@ -128,4 +167,25 @@ void testPhotoresistor()
     Serial.println(analogValue);
 
     delay(2000);
+}
+
+void setupKeypad()
+{
+    pinMode(KEYPAD_ROW_1_PIN, INPUT);
+    pinMode(KEYPAD_ROW_2_PIN, INPUT);
+    pinMode(KEYPAD_ROW_3_PIN, INPUT);
+    pinMode(KEYPAD_ROW_4_PIN, INPUT);
+    pinMode(KEYPAD_COLUMN_1_PIN, INPUT);
+    pinMode(KEYPAD_COLUMN_2_PIN, INPUT);
+    pinMode(KEYPAD_COLUMN_3_PIN, INPUT);
+    pinMode(KEYPAD_COLUMN_4_PIN, INPUT);
+}
+
+void testKeypad()
+{
+    char key = keypad.getKey();
+    if (key)
+    {
+        Serial.println(key);
+    }
 }

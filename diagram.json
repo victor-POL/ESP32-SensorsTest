@@ -7,36 +7,66 @@
     {
       "type": "wokwi-buzzer",
       "id": "bz1",
-      "top": 173.37,
-      "left": -149.53,
+      "top": 176.21,
+      "left": -239.34,
       "rotate": 270,
       "attrs": { "volume": "0.1" }
     },
     {
       "type": "wokwi-servo",
       "id": "servo1",
-      "top": 47.56,
-      "left": -247.73,
+      "top": 59.85,
+      "left": -343.21,
       "rotate": 180,
       "attrs": {}
     },
-    { "type": "wokwi-gnd", "id": "gnd1", "top": 138.81, "left": -40.76, "attrs": {} },
-    { "type": "wokwi-vcc", "id": "vcc1", "top": 144.29, "left": -4.6, "rotate": 180, "attrs": {} },
+    {
+      "type": "wokwi-gnd",
+      "id": "gnd1",
+      "top": 118.01,
+      "left": -108.82,
+      "rotate": 270,
+      "attrs": {}
+    },
+    { "type": "wokwi-vcc", "id": "vcc1", "top": 114.98, "left": -67, "rotate": 90, "attrs": {} },
     {
       "type": "wokwi-relay-module",
       "id": "relay1",
-      "top": -0.64,
-      "left": -184.58,
+      "top": -1.58,
+      "left": -358.53,
       "rotate": 180,
       "attrs": {}
     },
-    { "type": "wokwi-gnd", "id": "gnd2", "top": 57.22, "left": -14.91, "attrs": {} },
+    { "type": "wokwi-gnd", "id": "gnd2", "top": 7.1, "left": -60.27, "rotate": 270, "attrs": {} },
+    { "type": "wokwi-vcc", "id": "vcc2", "top": 20.5, "left": -110.05, "rotate": 90, "attrs": {} },
+    {
+      "type": "wokwi-photoresistor-sensor",
+      "id": "ldr1",
+      "top": -74.84,
+      "left": -306.99,
+      "attrs": {}
+    },
+    {
+      "type": "wokwi-gnd",
+      "id": "gnd3",
+      "top": -69.33,
+      "left": -73.35,
+      "rotate": 270,
+      "attrs": {}
+    },
     {
       "type": "wokwi-vcc",
-      "id": "vcc2",
-      "top": 61.15,
-      "left": -42.92,
-      "rotate": 180,
+      "id": "vcc3",
+      "top": -86.17,
+      "left": -66.44,
+      "rotate": 90,
+      "attrs": {}
+    },
+    {
+      "type": "wokwi-membrane-keypad",
+      "id": "keypad1",
+      "top": 97.59,
+      "left": 284.74,
       "attrs": {}
     }
   ],
@@ -47,10 +77,21 @@
     [ "esp:D27", "bz1:2", "red", [ "h0" ] ],
     [ "servo1:GND", "gnd1:GND", "black", [ "h0" ] ],
     [ "vcc1:VCC", "servo1:V+", "red", [ "v0" ] ],
-    [ "esp:D26", "servo1:PWM", "green", [ "h-17.87", "v-78.76" ] ],
-    [ "esp:D25", "relay1:IN", "green", [ "h-3.96", "v-146.82" ] ],
+    [ "esp:D26", "servo1:PWM", "green", [ "h-75.03", "v-62.32" ] ],
+    [ "esp:D25", "relay1:IN", "green", [ "h-64.64", "v-150.45" ] ],
     [ "relay1:VCC", "vcc2:VCC", "red", [ "h0" ] ],
-    [ "gnd2:GND", "relay1:GND", "black", [ "v0" ] ]
+    [ "gnd2:GND", "relay1:GND", "black", [ "v0" ] ],
+    [ "ldr1:AO", "esp:VN", "green", [ "h123.04", "v149.29" ] ],
+    [ "ldr1:GND", "gnd3:GND", "black", [ "h0" ] ],
+    [ "ldr1:VCC", "vcc3:VCC", "red", [ "h0" ] ],
+    [ "keypad1:R1", "esp:D13", "green", [ "v30.84", "h-361.44", "v-251.83" ] ],
+    [ "keypad1:R2", "esp:D12", "green", [ "v40.25", "h-378.75", "v-270.64" ] ],
+    [ "keypad1:R3", "esp:D14", "green", [ "v49.65", "h-397.65", "v-290.49" ] ],
+    [ "keypad1:R4", "esp:TX2", "green", [ "v87.27", "h-167.86", "v-357.37" ] ],
+    [ "keypad1:C1", "esp:RX2", "green", [ "v97.72", "h-185.72", "v-345.87" ] ],
+    [ "keypad1:C2", "esp:D4", "green", [ "v110.26", "h-204.63", "v-350.05" ] ],
+    [ "keypad1:C3", "esp:D2", "green", [ "v120.71", "h-224.83", "v-351.1" ] ],
+    [ "keypad1:C4", "esp:D15", "green", [ "v131.16", "h-243.98", "v-353.19" ] ]
   ],
   "dependencies": {}
 }
