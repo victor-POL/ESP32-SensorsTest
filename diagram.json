@@ -11,13 +11,46 @@
       "left": -149.53,
       "rotate": 270,
       "attrs": { "volume": "0.1" }
+    },
+    {
+      "type": "wokwi-servo",
+      "id": "servo1",
+      "top": 47.56,
+      "left": -247.73,
+      "rotate": 180,
+      "attrs": {}
+    },
+    { "type": "wokwi-gnd", "id": "gnd1", "top": 138.81, "left": -40.76, "attrs": {} },
+    { "type": "wokwi-vcc", "id": "vcc1", "top": 144.29, "left": -4.6, "rotate": 180, "attrs": {} },
+    {
+      "type": "wokwi-relay-module",
+      "id": "relay1",
+      "top": -0.64,
+      "left": -184.58,
+      "rotate": 180,
+      "attrs": {}
+    },
+    { "type": "wokwi-gnd", "id": "gnd2", "top": 57.22, "left": -14.91, "attrs": {} },
+    {
+      "type": "wokwi-vcc",
+      "id": "vcc2",
+      "top": 61.15,
+      "left": -42.92,
+      "rotate": 180,
+      "attrs": {}
     }
   ],
   "connections": [
     [ "esp:TX0", "$serialMonitor:RX", "", [] ],
     [ "esp:RX0", "$serialMonitor:TX", "", [] ],
     [ "bz1:1", "esp:GND.2", "black", [ "h0" ] ],
-    [ "esp:D27", "bz1:2", "black", [ "h0" ] ]
+    [ "esp:D27", "bz1:2", "red", [ "h0" ] ],
+    [ "servo1:GND", "gnd1:GND", "black", [ "h0" ] ],
+    [ "vcc1:VCC", "servo1:V+", "red", [ "v0" ] ],
+    [ "esp:D26", "servo1:PWM", "green", [ "h-17.87", "v-78.76" ] ],
+    [ "esp:D25", "relay1:IN", "green", [ "h-3.96", "v-146.82" ] ],
+    [ "relay1:VCC", "vcc2:VCC", "red", [ "h0" ] ],
+    [ "gnd2:GND", "relay1:GND", "black", [ "v0" ] ]
   ],
   "dependencies": {}
 }

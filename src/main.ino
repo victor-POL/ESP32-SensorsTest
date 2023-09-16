@@ -21,19 +21,23 @@
 
 Servo servo = Servo();
 
+// Relay
+#define RELAY_PIN 25
+
 void setup()
 {
     Serial.begin(115200);
-    
-    setupBuzzer();
 
-    setupServo();
-    
+    // setupBuzzer();
+
+    // setupServo();
+
+    setupRelay();
 }
 
 void loop()
 {
-    testServo();
+    testRelay();
 }
 
 void setupBuzzer()
@@ -75,15 +79,28 @@ void testBuzzer()
 
 void setupServo()
 {
-  servo.attach(SERVO_PIN, 500, 2500);
-  servo.write(0);
+    servo.attach(SERVO_PIN, 500, 2500);
+    servo.write(0);
 }
 
 void testServo()
 {
-  delay(3000);
-  servo.write(180);
-  delay(3000);
-  servo.write(0);
-  delay(3000);
+    delay(3000);
+    servo.write(180);
+    delay(3000);
+    servo.write(0);
+    delay(3000);
+}
+
+void setupRelay()
+{
+    pinMode(RELAY_PIN, OUTPUT);
+}
+
+void testRelay()
+{
+    digitalWrite(RELAY_PIN, HIGH);
+    delay(2500);
+    digitalWrite(RELAY_PIN, LOW);
+    delay(2500);
 }
