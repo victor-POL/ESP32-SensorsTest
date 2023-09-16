@@ -77,24 +77,36 @@ uint8_t columnPins[COLS_KEYPAD] = {
 };
 Keypad keypad = Keypad(makeKeymap(keys), rowPins, columnPins, ROWS_KEYPAD, COLS_KEYPAD);
 
+// Ultrasonic entrance
+#define ENTRANCE_SENSOR_TRIGGER_PIN 32
+#define ENTRANCE_SENSOR_ECHO_PIN 34
+
+// Ultrasonic door
+#define DOOR_SENSOR_TRIGGER_PIN 33
+#define DOOR_SENSOR_ECHO_PIN 35
+
 void setup()
 {
     Serial.begin(115200);
 
     // setupBuzzer();
 
-    setupServo();
+    // setupServo();
 
     // setupRelay();
 
     // setupPhotoresistor();
 
     // setupKeypad();
+
+    // setupUltrasonicEntrance();
+
+    setupUltrasonicDoor();
 }
 
 void loop()
 {
-    testServo();
+    testUltrasonicDoor();
 }
 
 // Buzzer
@@ -279,4 +291,60 @@ void testKeypadWithBuzzer()
             break;
         }
     }
+}
+
+// Ultrasonic entrance
+void setupUltrasonicEntrance()
+{
+    pinMode(ENTRANCE_SENSOR_TRIGGER_PIN, OUTPUT);
+    pinMode(ENTRANCE_SENSOR_ECHO_PIN, INPUT);
+}
+
+int getDistanceEntrance()
+{
+    digitalWrite(ENTRANCE_SENSOR_TRIGGER_PIN, LOW);
+    delayMicroseconds(2);
+
+    digitalWrite(ENTRANCE_SENSOR_TRIGGER_PIN, HIGH);
+    delayMicroseconds(10);
+
+    digitalWrite(ENTRANCE_SENSOR_TRIGGER_PIN, LOW);
+
+    return 0.01723 * pulseIn(ENTRANCE_SENSOR_ECHO_PIN, HIGH);
+}
+
+void testUltrasonicEntrance()
+{
+    int distance = getDistanceEntrance();
+    Serial.print("Entrada: ");
+    Serial.println(distance);
+    delay(2000);
+}
+
+// Ultrasonic door
+void setupUltrasonicDoor()
+{
+    pinMode(DOOR_SENSOR_TRIGGER_PIN, OUTPUT);
+    pinMode(DOOR_SENSOR_ECHO_PIN, INPUT);
+}
+
+int getDistanceDoor()
+{
+    digitalWrite(DOOR_SENSOR_TRIGGER_PIN, LOW);
+    delayMicroseconds(2);
+
+    digitalWrite(DOOR_SENSOR_TRIGGER_PIN, HIGH);
+    delayMicroseconds(10);
+
+    digitalWrite(DOOR_SENSOR_TRIGGER_PIN, LOW);
+
+    return 0.01723 * pulseIn(DOOR_SENSOR_ECHO_PIN, HIGH);
+}
+
+void testUltrasonicDoor()
+{
+    int distance = getDistanceDoor();
+    Serial.print("Puerta: ");
+    Serial.println(distance);
+    delay(2000);
 }
