@@ -1,4 +1,5 @@
 #include <Arduino.h>
+#include <ESP32Servo.h>
 
 // Buzzer
 #define BUZZER_PIN 27
@@ -15,16 +16,24 @@
 #define BUZZER_SUCCESS_DURATION 3000
 #define BUZZER_FAIL_DURATION 3000
 
+// Servo
+#define SERVO_PIN 26
+
+Servo servo = Servo();
+
 void setup()
 {
     Serial.begin(115200);
     
     setupBuzzer();
+
+    setupServo();
+    
 }
 
 void loop()
 {
-    testBuzzer();
+    testServo();
 }
 
 void setupBuzzer()
@@ -62,4 +71,19 @@ void testBuzzer()
     delay(2000);
     testBuzzerFailSoundAndDuration();
     delay(2000);
+}
+
+void setupServo()
+{
+  servo.attach(SERVO_PIN, 500, 2500);
+  servo.write(0);
+}
+
+void testServo()
+{
+  delay(3000);
+  servo.write(180);
+  delay(3000);
+  servo.write(0);
+  delay(3000);
 }
