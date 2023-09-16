@@ -24,6 +24,12 @@ Servo servo = Servo();
 // Relay
 #define RELAY_PIN 25
 
+// Photoresistor
+#define PHOTORESISTOR_PIN 39
+
+const float GAMMA = 0.7;
+const float RL10 = 50;
+
 void setup()
 {
     Serial.begin(115200);
@@ -32,12 +38,14 @@ void setup()
 
     // setupServo();
 
-    setupRelay();
+    // setupRelay();
+
+    setupPhotoresistor();
 }
 
 void loop()
 {
-    testRelay();
+    testPhotoresistor();
 }
 
 void setupBuzzer()
@@ -103,4 +111,21 @@ void testRelay()
     delay(2500);
     digitalWrite(RELAY_PIN, LOW);
     delay(2500);
+}
+
+void setupPhotoresistor()
+{
+    pinMode(PHOTORESISTOR_PIN, INPUT);
+}
+
+void testPhotoresistor()
+{
+    int analogValue = analogRead(PHOTORESISTOR_PIN);
+    float voltage = analogValue / 1024. * 5;
+    float resistance = 2000 * voltage / (1 - voltage / 5);
+    float lux = pow(RL10 * 1e3 * pow(10, GAMMA) / resistance, (1 / GAMMA));
+
+    Serial.println(analogValue);
+
+    delay(2000);
 }
