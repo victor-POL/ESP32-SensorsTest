@@ -81,20 +81,20 @@ void setup()
 {
     Serial.begin(115200);
 
-    setupBuzzer();
+    // setupBuzzer();
 
-    // setupServo();
+    setupServo();
 
     // setupRelay();
 
     // setupPhotoresistor();
 
-    setupKeypad();
+    // setupKeypad();
 }
 
 void loop()
 {
-    testKeypadWithBuzzer();
+    testServo();
 }
 
 // Buzzer
@@ -167,7 +167,7 @@ void setupServo()
 void testServo()
 {
     delay(3000);
-    servo.write(180);
+    servo.write(179);
     delay(3000);
     servo.write(0);
     delay(3000);
