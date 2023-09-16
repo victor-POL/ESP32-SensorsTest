@@ -88,7 +88,9 @@
     [ "keypad1:C2", "esp:RX2", "black", [ "v100.48", "h-272.88", "v-266.88" ] ],
     [ "keypad1:C1", "esp:TX2", "white", [ "v88.62", "h-247.96", "v-263.32" ] ],
     [ "esp:D2", "bz1:2", "green", [ "h0" ] ],
-    [ "bz1:1", "gnd4:GND", "blue", [ "v0" ] ]
+    [ "bz1:1", "gnd4:GND", "blue", [ "v0" ] ],
+    [ "ldr1:AO", "esp:VN", "green", [ "h152.75", "v139.74" ] ],
+    [ "servo1:PWM", "esp:D26", "green", [ "h159.18", "v53.99" ] ]
   ],
   "dependencies": {}
 }
