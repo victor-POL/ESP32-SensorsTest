@@ -98,6 +98,11 @@ rgb_lcd lcd;
 
 MFRC522 rfid(SS_PIN, RST_PIN);
 
+// Button
+#define BUTTON_PIN 36
+
+int previousButtonState = LOW;
+
 void setup()
 {
     Serial.begin(115200);
@@ -118,12 +123,14 @@ void setup()
 
     // setupLCD();
 
-    setupNFC();
+    // setupNFC();
+
+    setupButton();
 }
 
 void loop()
 {
-    testNFC();
+    testButton();
 }
 
 // Buzzer
@@ -428,4 +435,19 @@ void testNFC()
       rfid.PCD_StopCrypto1(); // stop encryption on PCD
     }
   }
+}
+
+// Button
+void setupButton()
+{
+    pinMode(BUTTON_PIN, INPUT);
+}
+
+void testButton()
+{
+    int buttonState = digitalRead(BUTTON_PIN);
+    if(buttonState != previousButtonState) {
+        Serial.println(buttonState);
+        previousButtonState = buttonState;
+    }
 }
