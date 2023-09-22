@@ -47,19 +47,18 @@ const float RL10 = 50;
 
 // Keypad
 #define ROWS_KEYPAD 4
-#define COLS_KEYPAD 4
-#define KEYS_ROW_1 '1', '2', '3', 'A'
-#define KEYS_ROW_2 '4', '5', '6', 'B'
-#define KEYS_ROW_3 '7', '8', '9', 'C'
-#define KEYS_ROW_4 '*', '0', '#', 'D'
-#define KEYPAD_ROW_1_PIN 13
-#define KEYPAD_ROW_2_PIN 12
-#define KEYPAD_ROW_3_PIN 14
+#define COLS_KEYPAD 3
+#define KEYS_ROW_1 '1', '2', '3'
+#define KEYS_ROW_2 '4', '5', '6'
+#define KEYS_ROW_3 '7', '8', '9'
+#define KEYS_ROW_4 '*', '0', '#'
+#define KEYPAD_ROW_1_PIN 17
+#define KEYPAD_ROW_2_PIN 16
+#define KEYPAD_ROW_3_PIN 4
 #define KEYPAD_ROW_4_PIN 27
-#define KEYPAD_COLUMN_1_PIN 17
-#define KEYPAD_COLUMN_2_PIN 16
-#define KEYPAD_COLUMN_3_PIN 4
-#define KEYPAD_COLUMN_4_PIN 15
+#define KEYPAD_COLUMN_1_PIN 14
+#define KEYPAD_COLUMN_2_PIN 12
+#define KEYPAD_COLUMN_3_PIN 13
 
 char keys[ROWS_KEYPAD][COLS_KEYPAD] = {
     {KEYS_ROW_1},
@@ -77,7 +76,6 @@ uint8_t columnPins[COLS_KEYPAD] = {
     KEYPAD_COLUMN_1_PIN,
     KEYPAD_COLUMN_2_PIN,
     KEYPAD_COLUMN_3_PIN,
-    KEYPAD_COLUMN_4_PIN,
 };
 Keypad keypad = Keypad(makeKeymap(keys), rowPins, columnPins, ROWS_KEYPAD, COLS_KEYPAD);
 
@@ -94,7 +92,7 @@ rgb_lcd lcd;
 
 // NFC
 #define SS_PIN  5  // ESP32 pin GPIO5 
-#define RST_PIN 27 // ESP32 pin GPIO27 
+#define RST_PIN 15 // ESP32 pin GPIO27 
 
 MFRC522 rfid(SS_PIN, RST_PIN);
 
@@ -254,7 +252,6 @@ void setupKeypad()
     pinMode(KEYPAD_COLUMN_1_PIN, INPUT);
     pinMode(KEYPAD_COLUMN_2_PIN, INPUT);
     pinMode(KEYPAD_COLUMN_3_PIN, INPUT);
-    pinMode(KEYPAD_COLUMN_4_PIN, INPUT);
 }
 
 void testKeypad()
