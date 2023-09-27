@@ -97,7 +97,7 @@ rgb_lcd lcd;
 MFRC522 rfid(SS_PIN, RST_PIN); // Instance of the class
 MFRC522::MIFARE_Key key;
 // Init array that will store new NUID
-byte nuidPICC[4];
+byte idReaded[4];
 
 //xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 String DatoHex;
@@ -415,19 +415,11 @@ String printHex(byte *buffer, byte bufferSize)
 void setupNFC()
 {
     delay(10000);
+
     SPI.begin();     // init SPI bus
     rfid.PCD_Init(); // init MFRC522
-
-Serial.println();
-   Serial.print(F("Reader :"));
-   rfid.PCD_DumpVersionToSerial();
-   for (byte i = 0; i < 6; i++) {
-     key.keyByte[i] = 0xFF;
-   } 
-   DatoHex = printHex(key.keyByte, MFRC522::MF_KEY_SIZE);
-   Serial.println();
-   Serial.println();
-   Serial.println("Iniciando el Programa");
+    
+    Serial.println("Iniciando el Programa");
 }
 
 void testNFC()
@@ -444,9 +436,7 @@ void testNFC()
         return;
     }
 
-    Serial.print(F("PICC type: "));
     MFRC522::PICC_Type piccType = rfid.PICC_GetType(rfid.uid.sak);
-    Serial.println(rfid.PICC_GetTypeName(piccType));
     // Check is the PICC of Classic MIFARE type
     if (piccType != MFRC522::PICC_TYPE_MIFARE_MINI && piccType != MFRC522::PICC_TYPE_MIFARE_1K && piccType != MFRC522::PICC_TYPE_MIFARE_4K)
     {
@@ -454,15 +444,12 @@ void testNFC()
         return;
     }
 
-    if (rfid.uid.uidByte[0] != nuidPICC[0] || rfid.uid.uidByte[1] != nuidPICC[1] || rfid.uid.uidByte[2] != nuidPICC[2] || rfid.uid.uidByte[3] != nuidPICC[3])
+    if (memcmp(rfid.uid.uidByte, idReaded, 4) != 0)
     {
         Serial.println("Se ha detectado una nueva tarjeta.");
 
-        // Store NUID into nuidPICC array
-        for (byte i = 0; i < 4; i++)
-        {
-            nuidPICC[i] = rfid.uid.uidByte[i];
-        }
+        // Store NUID into idReaded array
+        memcpy(idReaded, rfid.uid.uidByte, 4);
 
         DatoHex = printHex(rfid.uid.uidByte, rfid.uid.size);
         Serial.print("Codigo Tarjeta: ");
