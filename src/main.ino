@@ -99,7 +99,7 @@ MFRC522::MIFARE_Key key;
 // Init array that will store new NUID
 byte idReaded[4];
 
-//xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+// xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 String DatoHex;
 const String UserReg_1 = "23B36511";
 const String UserReg_2 = "B33786A3";
@@ -396,20 +396,26 @@ void testLCD()
 
 // NFC
 String printHex(byte *buffer, byte bufferSize)
-{  
-   String DatoHexAux = "";
-   for (byte i = 0; i < bufferSize; i++) 
-   {
-       if (buffer[i] < 0x10)
-       {
-        DatoHexAux = DatoHexAux + "0";
-        DatoHexAux = DatoHexAux + String(buffer[i], HEX);  
-       }
-       else { DatoHexAux = DatoHexAux + String(buffer[i], HEX); }
-   }
-   
-   for (int i = 0; i < DatoHexAux.length(); i++) {DatoHexAux[i] = toupper(DatoHexAux[i]);}
-   return DatoHexAux;
+{
+    String DatoHexAux = "";
+    for (byte i = 0; i < bufferSize; i++)
+    {
+        if (buffer[i] < 0x10)
+        {
+            DatoHexAux = DatoHexAux + "0";
+            DatoHexAux = DatoHexAux + String(buffer[i], HEX);
+        }
+        else
+        {
+            DatoHexAux = DatoHexAux + String(buffer[i], HEX);
+        }
+    }
+
+    for (int i = 0; i < DatoHexAux.length(); i++)
+    {
+        DatoHexAux[i] = toupper(DatoHexAux[i]);
+    }
+    return DatoHexAux;
 }
 
 void setupNFC()
@@ -418,7 +424,7 @@ void setupNFC()
 
     SPI.begin();     // init SPI bus
     rfid.PCD_Init(); // init MFRC522
-    
+
     Serial.println("Iniciando el Programa");
 }
 
@@ -453,6 +459,14 @@ void testNFC()
 
         DatoHex = printHex(rfid.uid.uidByte, rfid.uid.size);
         Serial.print("Codigo Tarjeta: ");
+        Serial.println(DatoHex);
+
+        DatoHex = "";
+        for (byte i = 0; i < rfid.uid.size; i++)
+        {
+            DatoHex = DatoHex + String(rfid.uid.uidByte[i], HEX);
+        }
+        Serial.print("Codigo Tarjeta 2: ");
         Serial.println(DatoHex);
 
         if (UserReg_1 == DatoHex)
