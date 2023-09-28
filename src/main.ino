@@ -5,6 +5,7 @@
 #include "rgb_lcd.h"
 #include <SPI.h>
 #include <MFRC522.h>
+#include "NFC.cpp"
 
 // Buzzer
 #define STATUS_KEY_SOUND 10
@@ -90,27 +91,15 @@ Keypad keypad = Keypad(makeKeymap(keys), rowPins, columnPins, ROWS_KEYPAD, COLS_
 // LCD
 rgb_lcd lcd;
 
-// NFC
-#define SS_PIN 5   // ESP32 pin GPIO5
-#define RST_PIN 15 // ESP32 pin GPIO27
-
-MFRC522 rfid(SS_PIN, RST_PIN); // Instance of the class
-MFRC522::MIFARE_Key key;
-// Init array that will store new NUID
-byte idReaded[4];
-byte keychainID[4] = {26, 164, 251, 176};
-byte cardID[4] = {195, 226, 203, 169};
-
-// xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-String DatoHex;
-const String UserReg_1 = "23B36511";
-const String UserReg_2 = "B33786A3";
-const String UserReg_3 = "7762C83B";
-
 // Button
 #define BUTTON_PIN 36
 
 int previousButtonState = LOW;
+
+// NFC
+String event = "";
+
+NFC nfc = NFC();
 
 void setup()
 {
@@ -130,16 +119,16 @@ void setup()
 
     // setupUltrasonicDoor();
 
-    // setupLCD();
+    setupLCD();
 
-    setupNFC();
+    // nfc.Setup();
 
     // setupButton();
 }
 
 void loop()
 {
-    testNFC();
+    testLCD();
 }
 
 // Buzzer
@@ -389,92 +378,24 @@ void setupLCD()
 
 void testLCD()
 {
-    lcd.print("Hello, world!");
+    // LoadInputNewPass
+    // 1. ClearScreen();
+    lcd.clear();
+
+    // 2. ShowMessage("Nueva clave:", 0);
+    // - SetCursor(0, line);
+    lcd.setCursor(0, 0);
+    // - Print(message);
+    lcd.print("Nueva clave:");
+
+
+    // 3. SetCursor(0, 1);
+    lcd.setCursor(0, 1);
+
+    /////////////////////////////////////////
     delay(5000);
-    lcd.setPWM(WHITE, 20);
-    delay(5000);
-    lcd.setPWM(RED, 200);
-}
-
-// NFC
-String printHex(byte *buffer, byte bufferSize)
-{
-    String DatoHexAux = "";
-    for (byte i = 0; i < bufferSize; i++)
-    {
-        if (buffer[i] < 0x10)
-        {
-            DatoHexAux = DatoHexAux + "0";
-            DatoHexAux = DatoHexAux + String(buffer[i], HEX);
-        }
-        else
-        {
-            DatoHexAux = DatoHexAux + String(buffer[i], HEX);
-        }
-    }
-
-    for (int i = 0; i < DatoHexAux.length(); i++)
-    {
-        DatoHexAux[i] = toupper(DatoHexAux[i]);
-    }
-    return DatoHexAux;
-}
-
-void setupNFC()
-{
-    delay(10000);
-
-    SPI.begin();     // init SPI bus
-    rfid.PCD_Init(); // init MFRC522
-
-    Serial.println("Iniciando el Programa");
-}
-
-void testNFC()
-{
-    // Reset the loop if no new card present on the sensor/reader. This saves the entire process when idle.
-    if (!rfid.PICC_IsNewCardPresent())
-    {
-        return;
-    }
-
-    // Verify if the NUID has been readed
-    if (!rfid.PICC_ReadCardSerial())
-    {
-        return;
-    }
-
-    MFRC522::PICC_Type piccType = rfid.PICC_GetType(rfid.uid.sak);
-    // Check is the PICC of Classic MIFARE type
-    if (piccType != MFRC522::PICC_TYPE_MIFARE_MINI && piccType != MFRC522::PICC_TYPE_MIFARE_1K && piccType != MFRC522::PICC_TYPE_MIFARE_4K)
-    {
-        Serial.println("Su Tarjeta no es del tipo MIFARE Classic.");
-        return;
-    }
-
-    // Se verifica si ya se leyo
-    if (memcmp(rfid.uid.uidByte, cardID, 4) == 0)
-    {
-        Serial.println("Tarjeta leida");
-
-        Serial.println();
-    }
-    else if (memcmp(rfid.uid.uidByte, keychainID, 4) == 0)
-    {
-        Serial.println("Llavero leido");
-
-        Serial.println();
-    }
-    else
-    {
-        Serial.println("Tarjeta o llavero no registrado");
-
-        Serial.println();
-    }
-    // Halt PICC
-    rfid.PICC_HaltA();
-    // Stop encryption on PCD
-    rfid.PCD_StopCrypto1();
+    /////////////////////////////////////////
+    // ClearNewPassEnteredOnScreen
 }
 
 // Button
