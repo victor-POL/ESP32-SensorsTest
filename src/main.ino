@@ -98,6 +98,8 @@ MFRC522 rfid(SS_PIN, RST_PIN); // Instance of the class
 MFRC522::MIFARE_Key key;
 // Init array that will store new NUID
 byte idReaded[4];
+byte keychainID[4] = {26, 164, 251, 176};
+byte cardID[4] = {195, 226, 203, 169};
 
 // xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 String DatoHex;
@@ -450,46 +452,24 @@ void testNFC()
         return;
     }
 
-    if (memcmp(rfid.uid.uidByte, idReaded, 4) != 0)
+    // Se verifica si ya se leyo
+    if (memcmp(rfid.uid.uidByte, cardID, 4) == 0)
     {
-        Serial.println("Se ha detectado una nueva tarjeta.");
+        Serial.println("Tarjeta leida");
 
-        // Store NUID into idReaded array
-        memcpy(idReaded, rfid.uid.uidByte, 4);
+        Serial.println();
+    }
+    else if (memcmp(rfid.uid.uidByte, keychainID, 4) == 0)
+    {
+        Serial.println("Llavero leido");
 
-        DatoHex = printHex(rfid.uid.uidByte, rfid.uid.size);
-        Serial.print("Codigo Tarjeta: ");
-        Serial.println(DatoHex);
-
-        DatoHex = "";
-        for (byte i = 0; i < rfid.uid.size; i++)
-        {
-            DatoHex = DatoHex + String(rfid.uid.uidByte[i], HEX);
-        }
-        Serial.print("Codigo Tarjeta 2: ");
-        Serial.println(DatoHex);
-
-        if (UserReg_1 == DatoHex)
-        {
-            Serial.println("USUARIO 1 - PUEDE INGRESAR");
-        }
-        else if (UserReg_2 == DatoHex)
-        {
-            Serial.println("USUARIO 2 - PUEDE INGRESAR");
-        }
-        else if (UserReg_3 == DatoHex)
-        {
-            Serial.println("USUARIO 3 - PUEDE INGRESAR");
-        }
-        else
-        {
-            Serial.println("NO ESTA REGISTRADO - PROHIBIDO EL INGRESO");
-        }
         Serial.println();
     }
     else
     {
-        Serial.println("Tarjeta leida previamente");
+        Serial.println("Tarjeta o llavero no registrado");
+
+        Serial.println();
     }
     // Halt PICC
     rfid.PICC_HaltA();
