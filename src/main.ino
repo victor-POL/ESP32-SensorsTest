@@ -37,6 +37,8 @@ bool buzzerOn = false;
 
 Servo servo = Servo();
 
+bool changeOrientation = true;
+
 // Relay
 #define RELAY_PIN 25
 
@@ -321,7 +323,7 @@ void setupUltrasonicEntrance()
     pinMode(ENTRANCE_SENSOR_ECHO_PIN, INPUT);
 }
 
-int getDistanceEntrance()
+int ReadSensor()
 {
     digitalWrite(ENTRANCE_SENSOR_TRIGGER_PIN, LOW);
     delayMicroseconds(2);
@@ -331,15 +333,19 @@ int getDistanceEntrance()
 
     digitalWrite(ENTRANCE_SENSOR_TRIGGER_PIN, LOW);
 
-    return 0.01723 * pulseIn(ENTRANCE_SENSOR_ECHO_PIN, HIGH);
+    return pulseIn(ENTRANCE_SENSOR_ECHO_PIN, HIGH);
+}
+
+int GetDistance()
+{
+    return 0.01723 * ReadSensor();
 }
 
 void testUltrasonicEntrance()
 {
-    int distance = getDistanceEntrance();
-    Serial.print("Entrada: ");
+    int distance = GetDistance();
+    Serial.println("distance: ");
     Serial.println(distance);
-    delay(2000);
 }
 
 // Ultrasonic door
@@ -367,7 +373,6 @@ void testUltrasonicDoor()
     int distance = getDistanceDoor();
     Serial.print("Puerta: ");
     Serial.println(distance);
-    delay(2000);
 }
 
 // LCD
@@ -376,26 +381,76 @@ void setupLCD()
     lcd.begin(16, 2);
 }
 
+// void testLCD()
+// {
+//     // LoadInputNewPass
+//     // 1. ClearScreen();
+//     lcd.clear();
+//     delay(1000);
+//     // 2. ShowMessage("Nueva clave:", 0);
+//     // - SetCursor(0, line);
+//     lcd.setCursor(0, 0);
+//     delay(1000);
+
+//     // - Print(message);
+//     lcd.print("Nueva clave:");
+
+//     // 3. SetCursor(0, 1);
+//     lcd.setCursor(0, 1);
+
+//     lcd.print("--------");
+
+//     /////////////////////////////////////////
+//     delay(5000);
+//     /////////////////////////////////////////
+//     // ClearNewPassEnteredOnScreen
+// }
+
 void testLCD()
 {
-    // LoadInputNewPass
-    // 1. ClearScreen();
-    lcd.clear();
+    for (int thisLetter = 'a'; thisLetter <= 'z'; thisLetter++)
+    {
+        for (int thisCol = 0; thisCol < 2; thisCol++)
+        {
+            for (int thisRow = 0; thisRow < 16; thisRow++)
+            {
+                // set the cursor position:
+                lcd.setCursor(thisRow, thisCol);
+                // print the letter:
+                lcd.write(thisLetter);
+                delay(200);
+            }
+        }
+    }
+}
 
-    // 2. ShowMessage("Nueva clave:", 0);
-    // - SetCursor(0, line);
-    lcd.setCursor(0, 0);
-    // - Print(message);
-    lcd.print("Nueva clave:");
-
-
-    // 3. SetCursor(0, 1);
-    lcd.setCursor(0, 1);
-
-    /////////////////////////////////////////
-    delay(5000);
-    /////////////////////////////////////////
-    // ClearNewPassEnteredOnScreen
+void testLCDWithServo()
+{
+    for (int thisLetter = 'a'; thisLetter <= 'z'; thisLetter++)
+    {
+        for (int thisCol = 0; thisCol < 2; thisCol++)
+        {
+            for (int thisRow = 0; thisRow < 16; thisRow++)
+            {
+                // set the cursor position:
+                lcd.setCursor(thisRow, thisCol);
+                // print the letter:
+                lcd.write(thisLetter);
+                delay(200);
+            }
+            if (changeOrientation)
+            {
+                changeOrientation = false;
+                servo.write(179);
+            }
+            else
+            {
+                changeOrientation = true;
+                servo.write(0);
+            }
+            delay(3000);
+        }
+    }
 }
 
 // Button
